@@ -147,9 +147,38 @@ nav.tabs button.on{background:var(--teal-soft);color:var(--teal2);font-weight:70
 .weight-list .wn{font-weight:600}
 .link-row{display:flex;flex-wrap:wrap;gap:10px;font-size:13.5px;margin-top:4px}
 .prebox{white-space:pre-wrap;font-family:inherit;margin:0;background:#f8faf9;border-radius:10px;padding:10px;color:#444;font-size:12.5px;max-height:220px;overflow:auto;line-height:1.5}
+
+/* soft unlock gate */
+body.locked > header, body.locked > main, body.locked > nav{display:none!important}
+#gate{display:none;position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#0f766e 0%,#134e4a 45%,#0f172a 100%);align-items:center;justify-content:center;padding:24px;font-family:inherit}
+body.locked #gate{display:flex}
+.gate-card{background:#fff;border-radius:20px;padding:28px 24px 24px;width:min(360px,100%);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.gate-card h2{margin:0 0 6px;font-size:20px;color:#1a1f24}
+.gate-card .gate-sub{font-size:13px;color:#7a8490;margin:0 0 18px;line-height:1.45}
+.gate-card label{display:block;font-size:12px;color:#7a8490;margin-bottom:6px}
+.gate-card input[type=password]{width:100%;font-size:16px;padding:12px 12px;border:1px solid #e8ecf0;border-radius:12px;margin-bottom:12px}
+.gate-card .btn{width:100%;padding:12px;font-size:16px;border-radius:12px}
+.gate-err{display:none;color:#d64545;font-size:13px;margin:0 0 10px;min-height:1.2em}
+.gate-err.on{display:block}
+.gate-foot{margin-top:14px;font-size:11px;color:#9aa3a0;text-align:center;line-height:1.4}
+
 </style>
 </head>
-<body>
+<body class="locked">
+<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gate-card">
+    <h2 id="gateTitle">需要通行密碼</h2>
+    <p class="gate-sub">呢個係預覽版工具。請輸入通行密碼先可以繼續使用。</p>
+    <form id="gateForm" autocomplete="off">
+      <label for="gatePw">通行密碼</label>
+      <input type="password" id="gatePw" name="pw" autocomplete="current-password" required autofocus>
+      <p class="gate-err" id="gateErr" role="alert">密碼唔正確，請再試。</p>
+      <button type="submit" class="btn" id="gateBtn">解鎖</button>
+    </form>
+    <p class="gate-foot">僅作簡易存取限制；唔係伺服器級保安。</p>
+  </div>
+</div>
+
 <header class="appbar" id="appHeader">
   <h1>DSE JUPAS 選科助手</h1>
   <div class="sub">輸入預計成績，睇下 JUPAS 邊啲學士課程啱你 · 資料只供參考</div>
@@ -63679,13 +63708,63 @@ $('detailFav').onclick=()=>{ const c=$('detailFav').dataset.code; if(!c) return;
   document.querySelectorAll('.fav[data-code="'+c+'"]').forEach(x=>x.classList.toggle('on',favs.has(c)));
   $('detailFav').classList.toggle('on',favs.has(c)); renderFav(); };
 $('moreBtn').onclick=()=>{ shown+=60; update(); };
-$('mdBox').innerHTML=md(MD);
-$('aboutBox').innerHTML=about();
-$('discl1').innerHTML='⚠️ 免責聲明：結果只供參考，唔保證錄取。入學要求來自 '+esc(META.catalogueYear)+'；收生分數係過往年份數字（每個課程有標示年份同來源）。「未有資料」即係搵唔到官方來源。請以 JUPAS 及院校官網為準。';
-initInputs(); renderElec(); initFilters(); update();
+/* ===== 簡易通行閘（客戶端 soft gate）===== */
+const _GK='dj_unlock_v1';
+const _GH='c4a29bf8ece878b8e56714b8a3b19d2b28bd10f4e2bb7b9c26c1507dced471a5';
+function _hex(buf){return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');}
+async function _sha256(s){
+  const buf=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return _hex(buf);
+}
+function _fnvToken(s){
+  let h=2166136261>>>0, mix=0;
+  for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619)>>>0; mix=(mix*33+s.charCodeAt(i))>>>0; }
+  return _hex(new Uint8Array([h>>>24,(h>>>16)&255,(h>>>8)&255,h&255,mix>>>24,(mix>>>16)&255,(mix>>>8)&255,mix&255]));
+}
+const _GF=_fnvToken(String.fromCharCode(74,85,80,64,64,115,115,50,48,50,54));
+async function _checkPw(pw){
+  if(globalThis.crypto&&crypto.subtle){
+    try{ return (await _sha256(pw))===_GH; }catch(e){}
+  }
+  return _fnvToken(pw)===_GF;
+}
 
-/* 供測試用 */
-window.__app={evalGrades,evalTotal,calcFormula,checkReq,PROGS,studentFromState,state,update,openDetail,closeDetail};
+function bootApp(){
+  if(window.__booted) return;
+  window.__booted=true;
+  document.body.classList.remove('locked');
+  const g=document.getElementById('gate'); if(g) g.remove();
+  $('mdBox').innerHTML=md(MD);
+  $('aboutBox').innerHTML=about();
+  $('discl1').innerHTML='⚠️ 免責聲明：結果只供參考，唔保證錄取。入學要求來自 '+esc(META.catalogueYear)+'；收生分數係過往年份數字（每個課程有標示年份同來源）。「未有資料」即係搵唔到官方來源。請以 JUPAS 及院校官網為準。';
+  initInputs(); renderElec(); initFilters(); update();
+  window.__app={evalGrades,evalTotal,calcFormula,checkReq,PROGS,studentFromState,state,update,openDetail,closeDetail};
+}
+
+(function setupGate(){
+  try{
+    if(sessionStorage.getItem(_GK)==='1'||localStorage.getItem(_GK)==='1'){ bootApp(); return; }
+  }catch(e){}
+  const form=document.getElementById('gateForm');
+  const err=document.getElementById('gateErr');
+  const btn=document.getElementById('gateBtn');
+  if(!form){ bootApp(); return; }
+  form.addEventListener('submit', async e=>{
+    e.preventDefault();
+    err.classList.remove('on');
+    btn.disabled=true;
+    let ok=false;
+    try{ ok=await _checkPw(document.getElementById('gatePw').value); }catch(ex){ ok=false; }
+    if(ok){
+      try{ sessionStorage.setItem(_GK,'1'); }catch(ex){}
+      bootApp();
+    }else{
+      err.classList.add('on');
+      document.getElementById('gatePw').select();
+      btn.disabled=false;
+    }
+  });
+})();
 
 </script>
 </body>
