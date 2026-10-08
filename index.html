@@ -4,79 +4,84 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>DSE JUPAS 選科助手</title>
-<meta name="theme-color" content="#1aa260">
+<meta name="theme-color" content="#1aa8a0">
 <style>
-:root{--g:#1aa260;--g2:#13824c;--gl:#e7f6ee;--bg:#f4f6f5;--card:#fff;--tx:#1d2521;--mu:#6b7670;--bd:#e3e8e5;
---c1:#1aa260;--c2:#f0a020;--c3:#e8590c;--c4:#9aa3a0;--c5:#c92a2a;--r:16px}
+:root{
+  --teal:#1aa8a0; --teal2:#128f88; --teal-soft:#e6f7f6; --teal-pill:#d4f1ef;
+  --bg:#f2f4f6; --card:#fff; --tx:#1a1f24; --mu:#7a8490; --bd:#e8ecf0;
+  --ok:#1aa8a0; --warn:#f0a020; --hot:#e8590c; --mute:#9aa3a0; --bad:#d64545;
+  --r:18px; --shadow:0 2px 10px rgba(20,30,40,.06);
+}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"PingFang HK","Noto Sans TC","Microsoft JhengHei",sans-serif;font-size:15px;-webkit-text-size-adjust:100%}
-a{color:var(--g2)}
-header{background:linear-gradient(135deg,#1aa260,#0f8a50);color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-header h1{margin:0;font-size:19px;letter-spacing:.5px}
-header .sub{font-size:12px;opacity:.9;margin-top:2px}
+a{color:var(--teal2);text-decoration:none}
+a:hover{text-decoration:underline}
+header.appbar{background:linear-gradient(135deg,#1aa8a0,#12958e);color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:20;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+header.appbar h1{margin:0;font-size:19px;letter-spacing:.3px;font-weight:700}
+header.appbar .sub{font-size:12px;opacity:.92;margin-top:3px}
+header.detailbar{display:none;background:#fff;color:var(--tx);padding:10px 12px;position:sticky;top:0;z-index:25;border-bottom:1px solid var(--bd);align-items:center;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+header.detailbar.on{display:flex}
+header.detailbar .back{border:0;background:#f3f5f7;width:36px;height:36px;border-radius:12px;font-size:18px;cursor:pointer;color:var(--tx);flex:none}
+header.detailbar .dtitle{font-weight:700;font-size:15px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.detail-open header.appbar{display:none}
+body.detail-open nav.tabs{display:none}
 main{max-width:860px;margin:0 auto;padding:12px 12px 96px}
-.card{background:var(--card);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.05);border:1px solid var(--bd)}
-.seg{display:flex;background:var(--gl);border-radius:12px;padding:3px;margin-bottom:12px}
-.seg button{flex:1;border:0;background:transparent;padding:9px 6px;border-radius:10px;font-size:14px;color:var(--g2);font-weight:600;cursor:pointer}
-.seg button.on{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.12);color:var(--tx)}
+.card{background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);border:1px solid var(--bd)}
+.seg{display:flex;background:var(--teal-soft);border-radius:12px;padding:3px;margin-bottom:12px}
+.seg button{flex:1;border:0;background:transparent;padding:9px 6px;border-radius:10px;font-size:14px;color:var(--teal2);font-weight:600;cursor:pointer}
+.seg button.on{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1);color:var(--tx)}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 @media(min-width:620px){.grid{grid-template-columns:repeat(4,1fr)}}
 label.f{display:flex;flex-direction:column;font-size:12px;color:var(--mu);gap:4px}
 select,input[type=text],input[type=number],input[type=search]{font-size:15px;padding:9px 10px;border:1px solid var(--bd);border-radius:10px;background:#fff;color:var(--tx);width:100%;-webkit-appearance:none;appearance:none}
 select{background-image:linear-gradient(45deg,transparent 50%,#889 50%),linear-gradient(135deg,#889 50%,transparent 50%);background-position:calc(100% - 15px) 55%,calc(100% - 10px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:26px}
 .erow{display:grid;grid-template-columns:1fr 92px 34px;gap:8px;margin-top:8px;align-items:center}
-.btn{border:0;border-radius:12px;padding:10px 14px;font-size:15px;font-weight:600;cursor:pointer;background:var(--g);color:#fff}
-.btn.ghost{background:var(--gl);color:var(--g2)}
+.btn{border:0;border-radius:12px;padding:10px 14px;font-size:15px;font-weight:600;cursor:pointer;background:var(--teal);color:#fff}
+.btn.ghost{background:var(--teal-soft);color:var(--teal2)}
 .btn.sm{padding:6px 10px;font-size:13px;border-radius:9px}
 .x{border:0;background:#f1f3f2;border-radius:9px;height:36px;font-size:18px;color:#888;cursor:pointer}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .muted{color:var(--mu);font-size:12.5px}
 .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
 .chip{flex:none;border:1px solid var(--bd);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer;white-space:nowrap;color:var(--tx)}
-.chip.on{background:var(--g);border-color:var(--g);color:#fff}
+.chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
 .sum{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}
 .sum div{background:#fff;border:1px solid var(--bd);border-radius:12px;text-align:center;padding:7px 2px;cursor:pointer}
 .sum b{display:block;font-size:18px}
 .sum span{font-size:11.5px;color:var(--mu)}
-.sum div.on{outline:2px solid var(--g)}
-.prog{position:relative}
-.prog .top{display:flex;gap:8px;align-items:flex-start}
-.badge{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:8px;color:#fff;white-space:nowrap}
-.b1{background:var(--c1)}.b2{background:var(--c2)}.b3{background:var(--c3)}.b4{background:var(--c4)}.b5{background:var(--c5)}
-.inst{font-size:11.5px;font-weight:700;color:var(--g2);background:var(--gl);padding:2px 7px;border-radius:7px}
+.sum div.on{outline:2px solid var(--teal)}
+/* list cards */
+.prog{position:relative;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;padding:14px 14px 14px 14px}
+.prog:active{transform:scale(.99)}
+.prog .top{display:flex;gap:8px;align-items:center}
+.badge{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;color:#fff;white-space:nowrap}
+.b1{background:var(--ok)}.b2{background:var(--warn)}.b3{background:var(--hot)}.b4{background:var(--mute)}.b5{background:var(--bad)}
+.inst{font-size:11.5px;font-weight:700;color:var(--teal2);background:var(--teal-soft);padding:2px 8px;border-radius:7px}
 .inst.fund{color:#5f3dc4;background:#f3f0ff}
 .code{font-size:12px;color:var(--mu);font-variant-numeric:tabular-nums}
-.pname{font-size:16px;font-weight:700;margin:4px 0 1px;line-height:1.35}
-.pen{font-size:12px;color:var(--mu);line-height:1.3}
-.fav{margin-left:auto;border:0;background:none;font-size:22px;cursor:pointer;line-height:1;color:#c7cdca;padding:0 2px}
+.pname{font-size:15.5px;font-weight:700;margin:6px 0 2px;line-height:1.35}
+.pen{font-size:12px;color:var(--mu);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.fav{margin-left:auto;border:0;background:none;font-size:22px;cursor:pointer;line-height:1;color:#c7cdca;padding:0 2px;z-index:2;position:relative}
 .fav.on{color:#e64980}
-.scorebar{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
-.kv{background:#f6f8f7;border-radius:10px;padding:5px 9px;font-size:12px;color:var(--mu)}
+.scorebar{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.kv{background:#f6f8f9;border-radius:10px;padding:5px 9px;font-size:12px;color:var(--mu)}
 .kv b{color:var(--tx);font-size:14px;margin-left:3px}
-.tag{font-size:11px;border-radius:6px;padding:2px 6px;background:#fff4e6;color:#b35c00;margin-left:4px}
+.tag{font-size:11px;border-radius:6px;padding:2px 6px;background:#fff4e6;color:#b35c00;margin-right:4px}
 .tag.gr{background:#eef1f0;color:#5f6b66}
-details{margin-top:8px}
-details summary{cursor:pointer;color:var(--g2);font-size:13px;font-weight:600;list-style:none}
-details summary::-webkit-details-marker{display:none}
-.det{font-size:13px;line-height:1.55;margin-top:6px}
-.det h4{margin:10px 0 4px;font-size:13px}
-.det pre{white-space:pre-wrap;font-family:inherit;margin:0;background:#f8faf9;border-radius:8px;padding:8px;color:#444;font-size:12px;max-height:220px;overflow:auto}
-.fail{color:var(--c5);font-size:12.5px;margin-top:6px}
+.tag.hot{background:#fff3bf;color:#a07900;font-weight:700}
+.tag.disc{background:#e7f5ff;color:#1971c2}
+.chev{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#c0c6cc;font-size:20px;pointer-events:none}
+.fail{color:var(--bad);font-size:12.5px;margin-top:6px}
 .disc{font-size:12px;color:#7a5b00;background:#fff9db;border:1px solid #ffe8a1;border-radius:12px;padding:10px;line-height:1.5}
-nav.tabs{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 24px));background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:28px;box-shadow:0 4px 18px rgba(0,0,0,.15);display:flex;padding:6px;z-index:30}
+nav.tabs{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 24px));background:rgba(255,255,255,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:28px;box-shadow:0 4px 18px rgba(0,0,0,.14);display:flex;padding:6px;z-index:30}
 nav.tabs button{flex:1;border:0;background:none;padding:7px 2px;border-radius:22px;font-size:12px;color:#555;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}
 nav.tabs button .i{font-size:19px;line-height:1}
-nav.tabs button.on{background:var(--gl);color:var(--g2);font-weight:700}
+nav.tabs button.on{background:var(--teal-soft);color:var(--teal2);font-weight:700}
 .page{display:none}.page.on{display:block}
-.md h1{font-size:19px}.md h2{font-size:17px;margin-top:22px;border-left:4px solid var(--g);padding-left:8px}
+.md h1{font-size:19px}.md h2{font-size:17px;margin-top:22px;border-left:4px solid var(--teal);padding-left:8px}
 .md table{border-collapse:collapse;width:100%;font-size:12.5px;display:block;overflow-x:auto}
 .md th,.md td{border:1px solid var(--bd);padding:5px 6px;text-align:left;vertical-align:top;min-width:96px}
-.md td:first-child,.md th:first-child{min-width:70px}
-.md th{background:var(--gl)}
-.hist{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px}
-.hist th,.hist td{border:1px solid var(--bd);padding:4px 6px;text-align:left}
-.hist th{background:#f6f8f7}
-.hist b{font-size:13px}
+.md th{background:var(--teal-soft)}
 .md blockquote{margin:8px 0;padding:8px 10px;background:#fff9db;border-radius:10px;font-size:13px}
 .md li{margin:3px 0;line-height:1.55}
 .md p{line-height:1.6}
@@ -84,12 +89,75 @@ nav.tabs button.on{background:var(--gl);color:var(--g2);font-weight:700}
 .toolbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .switch{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--mu)}
 .more{display:block;width:100%;margin-top:6px}
+
+/* ===== Detail page ===== */
+#p-detail{padding-bottom:24px}
+.d-hero .title-row{display:flex;align-items:flex-start;gap:8px}
+.d-hero .title{font-size:20px;font-weight:800;line-height:1.35;flex:1;margin:0}
+.d-hero .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px}
+.pill.hot{background:#fff3bf;color:#9a7200}
+.pill.disc{background:#e7f5ff;color:#1971c2}
+.pill.fund{background:#f3f0ff;color:#5f3dc4}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:14px;border-top:1px solid var(--bd);padding-top:12px}
+.stats-row .st{text-align:center;padding:0 4px;border-right:1px solid var(--bd)}
+.stats-row .st:last-child{border-right:0}
+.stats-row .st .lbl{font-size:11px;color:var(--mu);margin-bottom:3px}
+.stats-row .st .val{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
+.sec-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.sec-head .ico{width:28px;height:28px;border-radius:9px;background:var(--teal-soft);color:var(--teal2);display:flex;align-items:center;justify-content:center;font-size:15px;flex:none}
+.sec-head h3{margin:0;font-size:15px;font-weight:800;flex:1}
+.sec-head .src{font-size:11px;color:var(--mu);font-weight:500;margin-top:2px}
+.status-pill{display:inline-flex;align-items:center;padding:6px 12px;border-radius:999px;font-size:12.5px;font-weight:800;color:#fff;background:var(--teal);white-space:nowrap}
+.status-pill.warn{background:var(--warn)}
+.status-pill.hot{background:var(--hot)}
+.status-pill.mute{background:var(--mute)}
+.status-pill.bad{background:var(--bad)}
+.cmp-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.cmp-row .cell{text-align:center;background:#f7f9fa;border-radius:12px;padding:10px 6px}
+.cmp-row .cell .lbl{font-size:11px;color:var(--mu)}
+.cmp-row .cell .val{font-size:20px;font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums}
+.cmp-row .cell .delta{font-size:12px;font-weight:700;margin-top:2px}
+.cmp-row .cell .delta.up{color:var(--teal)}
+.cmp-row .cell .delta.dn{color:var(--bad)}
+.footnote{font-size:11.5px;color:var(--mu);margin-top:10px;line-height:1.45}
+.year-tabs{display:flex;gap:6px;margin:10px 0 8px}
+.year-tabs button{flex:1;border:1px solid var(--bd);background:#fff;border-radius:10px;padding:7px 4px;font-size:13px;font-weight:600;cursor:pointer;color:var(--mu)}
+.year-tabs button.on{background:var(--teal-soft);border-color:var(--teal);color:var(--teal2)}
+.hist{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px}
+.hist th,.hist td{border-bottom:1px solid var(--bd);padding:8px 6px;text-align:left}
+.hist th{color:var(--mu);font-weight:600;font-size:11.5px;border-bottom:1px solid var(--bd)}
+.hist b{font-size:13.5px}
+.formula-badge{display:inline-block;background:#f7f9fa;border-radius:12px;padding:10px 14px;font-size:15px;font-weight:700;color:var(--tx)}
+.calc-table{width:100%;border-collapse:collapse;font-size:13px}
+.calc-table th{font-size:11.5px;color:var(--mu);font-weight:600;text-align:left;padding:6px 4px;border-bottom:1px solid var(--bd)}
+.calc-table td{padding:9px 4px;border-bottom:1px solid #f0f2f4;vertical-align:middle}
+.calc-table tr:last-child td{border-bottom:0}
+.mw{display:inline-block;background:var(--teal-pill);color:var(--teal2);font-weight:800;font-size:12px;padding:2px 8px;border-radius:999px}
+.total-box{margin-top:12px;background:#f4f8f8;border-radius:14px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+.total-box .tl{font-size:13px;color:var(--mu);font-weight:600}
+.total-box .tv{font-size:26px;font-weight:800;color:var(--teal);font-variant-numeric:tabular-nums}
+.req-list{margin:0;padding:0;list-style:none}
+.req-list li{position:relative;padding:8px 0 8px 28px;border-bottom:1px solid #f0f2f4;font-size:14px;line-height:1.45}
+.req-list li:last-child{border-bottom:0}
+.req-list li::before{content:"✓";position:absolute;left:0;top:8px;width:20px;height:20px;border-radius:50%;background:var(--teal-soft);color:var(--teal2);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;text-align:center;line-height:20px}
+.weight-list{margin:0;padding:0;list-style:none}
+.weight-list li{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #f0f2f4;font-size:14px}
+.weight-list li:last-child{border-bottom:0}
+.weight-list .wn{font-weight:600}
+.link-row{display:flex;flex-wrap:wrap;gap:10px;font-size:13.5px;margin-top:4px}
+.prebox{white-space:pre-wrap;font-family:inherit;margin:0;background:#f8faf9;border-radius:10px;padding:10px;color:#444;font-size:12.5px;max-height:220px;overflow:auto;line-height:1.5}
 </style>
 </head>
 <body>
-<header>
+<header class="appbar" id="appHeader">
   <h1>DSE JUPAS 選科助手</h1>
   <div class="sub">輸入預計成績，睇下 JUPAS 邊啲學士課程啱你 · 資料只供參考</div>
+</header>
+<header class="detailbar" id="detailHeader">
+  <button class="back" id="backBtn" aria-label="返回">←</button>
+  <div class="dtitle" id="detailTitle">課程詳情</div>
+  <button class="fav" id="detailFav" aria-label="加入最愛">♥</button>
 </header>
 <main>
 <section class="page on" id="p-home">
@@ -145,7 +213,7 @@ nav.tabs button.on{background:var(--gl);color:var(--g2);font-weight:700}
         <option value="2024">比較年份：2024</option>
       </select>
     </div>
-    <p class="muted" style="margin:6px 0 0">配對標籤用上面揀嘅年份同收生分數比較；每個課程「詳情」可以睇 2024／2025／2026 三年歷史（冇公布就顯示未有資料）。</p>
+    <p class="muted" style="margin:6px 0 0">配對標籤用上面揀嘅年份同收生分數比較；撳課程卡進入詳情頁，可睇 2024／2025／2026 三年歷史同逐科計分。</p>
     <div class="row" style="margin-top:8px;justify-content:space-between">
       <label class="switch"><input type="checkbox" id="onlyElig"> 只顯示符合入學要求</label>
       <span class="muted" id="countTxt"></span>
@@ -155,6 +223,10 @@ nav.tabs button.on{background:var(--gl);color:var(--g2);font-weight:700}
   <div id="list"></div>
   <button class="btn ghost more" id="moreBtn" style="display:none">顯示更多</button>
   <div class="disc" style="margin-top:12px" id="discl1"></div>
+</section>
+
+<section class="page" id="p-detail">
+  <div id="detailBody"></div>
 </section>
 
 <section class="page" id="p-fav">
@@ -380,6 +452,7 @@ const LV = r => r==7?'5**':r==6?'5*':String(r);
 
 const LABEL = {safe:['穩陣','b1'],ok:['有機會','b2'],reach:['進取','b3'],na:['未有資料','b4'],nc:['未能比較','b4'],no:['不符合','b5']};
 const ORDER = {safe:0,ok:1,reach:2,nc:3,na:3,no:4};
+const POPULAR_BAND_A = 450; // ~top 20% Band A 申請 → 熱門
 
 /* ===== 入學要求檢查 ===== */
 // student: {ranks:{CHI,ENG,MATH,M12?,BIO...}, csd:'A'|'N'}
@@ -633,25 +706,86 @@ function sorter(a,b){
   return ORDER[a.label]-ORDER[b.label] || (a.label==='safe'? a.margin-b.margin : b.margin-a.margin) || a.p.code.localeCompare(b.p.code);
 }
 function fmt(x){ return x==null?'未有資料':(Math.round(x*100)/100); }
+function isPopular(p){ const a=(p.stats&&p.stats.apps&&p.stats.apps.bandA)||0; return a>=POPULAR_BAND_A; }
+function intakeOf(p){ return (p.stats&&p.stats.offers&&p.stats.offers.total)!=null ? p.stats.offers.total : null; }
+function bandAOf(p){ return (p.stats&&p.stats.apps&&p.stats.apps.bandA)!=null ? p.stats.apps.bandA : null; }
+
+function statusInfo(r){
+  const ref=r.ref;
+  if(r.label==='no') return {txt:'不符合',cls:'bad'};
+  if(r.label==='na') return {txt:'未有資料',cls:'mute'};
+  if(r.label==='nc') return {txt:'未能比較',cls:'mute'};
+  if(r.label==='safe'){
+    if(ref&&ref.kind==='mean') return {txt:'高於平均分',cls:''};
+    if(ref&&ref.kind==='uqlq') return {txt:'高於上四分位',cls:''};
+    return {txt:'穩陣',cls:''};
+  }
+  if(r.label==='ok') return {txt:'有機會',cls:'warn'};
+  if(r.label==='reach'){
+    if(ref&&ref.kind==='mean') return {txt:'低於平均分',cls:'hot'};
+    return {txt:'進取',cls:'hot'};
+  }
+  return {txt:LABEL[r.label]?LABEL[r.label][0]:'—',cls:'mute'};
+}
+
+function formulaWeights(f){
+  if(!f||!f.slots) return [];
+  const m={};
+  f.slots.forEach(sl=>{
+    if(sl.w) Object.entries(sl.w).forEach(([k,v])=>{ if(v!=null && Number(v)!==1) m[k]=Math.max(m[k]||0, Number(v)); });
+    if(sl.d!=null && Number(sl.d)!==1){
+      const targets = sl.f && sl.f.length ? sl.f : null;
+      if(targets) targets.forEach(s=>{ m[s]=Math.max(m[s]||0, Number(sl.d)); });
+      else m['*']=Math.max(m['*']||0, Number(sl.d));
+    }
+  });
+  return Object.entries(m).filter(([k])=>k!=='*').sort((a,b)=>b[1]-a[1] || a[0].localeCompare(b[0]));
+}
+
+function reqBullets(p){
+  const req = p.req || p.gen;
+  if(!req) return [];
+  const out=[];
+  const c=req.core||{};
+  if(c.CHI!=null) out.push('中國語文：第 '+LV(c.CHI)+' 級或以上');
+  if(c.ENG!=null) out.push('英國語文：第 '+LV(c.ENG)+' 級或以上');
+  if(c.MATH!=null) out.push('數學：第 '+LV(c.MATH)+' 級或以上');
+  if(c.CSD==='A') out.push('公民與社會發展：達標');
+  if(req.alts&&req.alts.length){
+    req.alts.forEach((a,i)=>{
+      const prefix = req.alts.length>1 ? '選修（組合 '+(i+1)+'）：' : '選修：';
+      out.push(prefix + a.map(descItem).join('＋'));
+    });
+  }
+  if(p.same && p.req==null) out.push('與院校一般入學要求相同');
+  return out;
+}
 
 function scoreHistory(p){
   const by=p.scoresByYear||{};
   const years=['2026','2025','2024'];
   const rows=years.map(y=>{
     const s=by[y];
-    if(!s) return `<tr><td>${y}</td><td colspan="3">未有資料</td><td></td></tr>`;
+    if(!s || (s.median==null && s.mean==null && s.lq==null))
+      return `<tr><td>${y}</td><td colspan="3">未有資料</td><td></td></tr>`;
     const main=s.median!=null?`中位數 <b>${fmt(s.median)}</b>`:s.mean!=null?`平均分 <b>${fmt(s.mean)}</b>`:s.lq!=null?`下四分位 <b>${fmt(s.lq)}</b>`:'—';
-    const lq=s.lq!=null && s.median!=null?fmt(s.lq):(s.lq!=null && s.mean==null && s.median==null?fmt(s.lq):'—');
+    const lq=s.lq!=null && (s.median!=null||s.mean!=null)?fmt(s.lq):(s.lq!=null && s.mean==null && s.median==null?fmt(s.lq):'—');
     const uq=s.uq!=null?fmt(s.uq):'—';
-    const note=s.note?`<div class="muted">${esc(s.note)}</div>`:'';
     const src=s.src?` <a href="${esc(s.src)}" target="_blank" rel="noopener">來源</a>`:'';
-    return `<tr><td>${y}</td><td>${main}</td><td>${lq}</td><td>${uq}</td><td>${note}${src}</td></tr>`;
+    return `<tr><td>${y}</td><td>${main}</td><td>${lq}</td><td>${uq}</td><td>${src}</td></tr>`;
   }).join('');
   return `<table class="hist"><thead><tr><th>年份</th><th>主要分數</th><th>LQ</th><th>UQ</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
+function listTags(p){
+  let h='';
+  if(isPopular(p)) h+='<span class="tag hot">熱門</span>';
+  if(p.disc) h+=`<span class="tag disc">${esc(p.disc)}</span>`;
+  return h;
+}
+
 function card(r){
-  const p=r.p, I=INST[p.inst], L=LABEL[r.label]; const ref=r.ref; const f=p.formula;
+  const p=r.p, I=INST[p.inst], L=LABEL[r.label]; const ref=r.ref;
   const scoreName = state.mode==='grades' ? '你的分數' : '你的分數（換算）';
   const refTxt = ref ? (ref.kind==='mean'
       ? `<div class="kv">平均分<b>${fmt(ref.m)}</b></div>`
@@ -659,28 +793,17 @@ function card(r){
       : `<div class="kv">中位數<b>${fmt(ref.m)}</b></div><div class="kv">下四分位<b>${fmt(ref.lq)}</b></div>`)+`<div class="kv">${ref.year} 年</div>`
     : `<div class="kv">收生分數<b style="font-size:12px">未有資料</b></div>`;
   const tags=(r.tags||[]).map(t=>`<span class="tag${/保守|同為|粗略比較/.test(t)?' gr':''}">${esc(t)}</span>`).join('');
-  const reqTxt = p.same ? '與院校一般入學要求相同' : '';
-  const det=[];
-  if(r.fails && r.fails.length) det.push(`<h4>未符合</h4><pre>${esc(r.fails.join('\n'))}</pre>`);
-  if(state.mode==='grades' && r.calc){
-    det.push(`<h4>計分（${r.calc.scale} 分制）</h4><div>${r.calc.detail.map(d=>esc(SUBJ[d.s]||d.s)+' '+d.pts+(d.w!==1?' ×'+round2(d.w):'')).join('、')}${r.calc.bonus?'；加分 '+r.calc.bonus+'（'+esc(r.calc.bonusTxt)+'）':''} ＝ <b>${r.calc.total}</b></div>`);
-  }
-  det.push(`<h4>計分公式</h4><div>${f?esc(f.text)+`<br><span class="muted">公式年份：${f.year}${f.note?'；'+esc(f.note):''}${f.partial&&!f.partialTag?'；本 App 未取得科目比重，以不加權計':''}　來源：<a href="${esc(f.src)}" target="_blank" rel="noopener">連結</a></span>`:'未有資料（以通用最佳五科估算）'}</div>`);
-  det.push(`<h4>收生分數（比較用：${ref?ref.year+' 年':'未有資料'}）</h4><div>${ref?(ref.kind==='mean'?'平均分 '+fmt(ref.m):ref.kind==='uqlq'?'上四分位 '+fmt(ref.uq)+'；下四分位 '+fmt(ref.lq)+'（未有中位數）':'上四分位 '+fmt(ref.uq)+'；中位數 '+fmt(ref.m)+'；下四分位 '+fmt(ref.lq))+'（'+ref.year+' 年）':'未有資料'}${ref&&ref.kind==='mean'?'<br><span class="muted">以平均分比較</span>':''}${p.score&&p.score.note && !(p.scoresByYear&&Object.keys(p.scoresByYear).length)?'<br><span class="muted">'+esc(p.score.note)+'</span>':''}</div>`);
-  det.push(`<h4>往年收生分數（2024–2026）</h4>${scoreHistory(p)}`);
-  if(p.stats) det.push(`<h4>2026 JUPAS 申請／取錄人數</h4><div>Band A 申請 ${p.stats.apps?.bandA??'–'}／總申請 ${p.stats.apps?.total??'–'}；Band A 取錄 ${p.stats.offers?.bandA??'–'}／總取錄 ${p.stats.offers?.total??'–'}</div>`);
-  det.push(`<h4>入學要求（JUPAS 2027 目錄）</h4><div style="white-space:pre-line">${reqTxt?esc(reqTxt)+'<br>':''}${p.req?esc(reqSummary(p.req)):''}${!p.same&&!p.req?'未有資料':''}</div>`);
-  if(p.remarks) det.push(`<h4>備註（原文）</h4><pre>${esc(p.remarks)}</pre>`);
-  det.push(`<div style="margin-top:8px"><a href="${esc(p.jupasUrl)}" target="_blank" rel="noopener">JUPAS 課程頁</a>${p.website?` · <a href="${esc(p.website)}" target="_blank" rel="noopener">課程網站</a>`:''} · 學費：${esc(p.fee||'未有資料')} · 範疇（自動分類）：${esc(p.disc)}</div>`);
-  return `<div class="card prog" data-code="${p.code}">
+  return `<div class="card prog" data-code="${p.code}" role="button" tabindex="0">
    <div class="top"><span class="badge ${L[1]}">${r.label==='na'&&r.empty?'—':L[0]}</span><span class="inst">${I.short}</span>${p.funding&&p.funding!=='UGC-funded'?`<span class="inst fund">${p.funding==='SSSDP'?'SSSDP 資助':'自資'}</span>`:''}<span class="code">${p.code}</span>
    <button class="fav${favs.has(p.code)?' on':''}" data-code="${p.code}" aria-label="加入最愛">♥</button></div>
-   <div class="pname">${esc(p.nameZh)}</div><div class="pen">${esc(p.nameEn)}</div>
+   <div class="pname">${esc(p.nameZh)}</div>
+   <div style="margin-top:4px">${listTags(p)}</div>
    <div class="scorebar">${r.score!=null?`<div class="kv">${scoreName}<b>${fmt(r.score)}</b></div>`:''}${refTxt}</div>
    ${tags?`<div style="margin-top:6px">${tags}</div>`:''}
    ${r.fails&&r.fails.length?`<div class="fail">✕ ${esc(r.fails[0].split('\n')[0])}${r.fails.length>1?'（另 '+(r.fails.length-1)+' 項）':''}</div>`:''}
-   <details><summary>詳情 ▾</summary><div class="det">${det.join('')}</div></details></div>`;
+   <span class="chev">›</span></div>`;
 }
+
 function reqSummary(req){
   const c=req.core||{}; const a=['CHI','ENG','MATH'].filter(s=>c[s]!=null).map(s=>SUBJ[s]+' '+LV(c[s]));
   if(c.CSD) a.push('公社科 達標');
@@ -688,6 +811,143 @@ function reqSummary(req){
   if(req.alts&&req.alts.length) t+='\n選修：'+req.alts.map((x,i)=>(req.alts.length>1?'('+(i+1)+') ':'')+x.map(descItem).join('＋')).join(' 或 ');
   return t;
 }
+
+function calcTableHtml(r){
+  if(!(state.mode==='grades' && r.calc && r.calc.detail && r.calc.detail.length)){
+    if(state.mode==='total' && r.score!=null){
+      return `<div class="muted">總分模式：以輸入總分粗略換算，冇逐科拆解。</div>
+        <div class="total-box"><div class="tl">換算後分數</div><div class="tv">${fmt(r.score)}</div></div>`;
+    }
+    return `<div class="muted">請先以逐科模式輸入成績，先至可以睇到逐科加權計分表。</div>`;
+  }
+  const rows=r.calc.detail.map(d=>{
+    const w=round2(d.w); const tot=round2(d.pts*d.w);
+    const mp = w!==1 ? `<span class="mw">×${w}</span>` : '—';
+    const grade = state.mode==='grades' ? (LV(studentFromState().ranks[d.s]||0)) : '—';
+    return `<tr><td>${esc(SUBJ[d.s]||d.s)}</td><td>${grade}</td><td>${fmt(d.pts)}</td><td>${mp}</td><td><b>${fmt(tot)}</b></td></tr>`;
+  }).join('');
+  const bonus = r.calc.bonus ? `<tr><td colspan="4">加分（${esc(r.calc.bonusTxt||'')}）</td><td><b>+${fmt(r.calc.bonus)}</b></td></tr>` : '';
+  return `<table class="calc-table"><thead><tr><th>科目</th><th>分數</th><th>轉換</th><th>加乘</th><th>總分</th></tr></thead><tbody>${rows}${bonus}</tbody></table>
+    <div class="total-box"><div class="tl">最終總加權分數</div><div class="tv">${fmt(r.calc.total)}</div></div>`;
+}
+
+function renderDetail(code){
+  const r = lastResults.find(x=>x.p.code===code) || (()=>{ const p=PROGS.find(x=>x.code===code); return p?(state.mode==='grades'?evalGrades(p,studentFromState()):evalTotal(p,parseFloat(state.total)||0,state.tscale)):null; })();
+  if(!r){ $('detailBody').innerHTML='<div class="empty">搵唔到課程</div>'; return; }
+  const p=r.p, I=INST[p.inst], ref=r.ref, f=p.formula, st=statusInfo(r);
+  const bandA=bandAOf(p), intake=intakeOf(p);
+  const baseVal = ref ? base(ref) : null;
+  let deltaHtml='';
+  if(r.score!=null && baseVal!=null && baseVal>0){
+    const pct=round2((r.score-baseVal)/baseVal*100);
+    deltaHtml = `<div class="delta ${pct>=0?'up':'dn'}">${pct>=0?'+':''}${pct}%</div>`;
+  }
+  const scoreLabel = ref?(ref.kind==='mean'?'平均分':ref.kind==='uqlq'?'下四分位':'中位數'):'收生分數';
+  const scoreVal = ref?(ref.kind==='mean'?fmt(ref.m):ref.kind==='uqlq'?fmt(ref.lq):fmt(ref.m)):'—';
+  const yearVal = ref&&ref.year!=null?ref.year:'—';
+  let footnote='';
+  if(ref&&ref.kind==='mean') footnote='^ 此院校只公布平均收生成績（Mean），所以此處顯示平均分，而非其他大學常見的 UQ／中位數／LQ。';
+  else if(ref&&ref.kind==='uqlq') footnote='^ 此課程／院校未有公布中位數，比較以上／下四分位為準。';
+  else if(ref&&ref.kind==='median') footnote='^ 收生分數來自院校／JUPAS 公布的過往年份統計，只供參考。';
+  const weights=formulaWeights(f);
+  const bullets=reqBullets(p);
+  const formulaTxt = f ? (f.text||'Best 5') : '通用最佳五科（課程公式未有資料）';
+  const srcLine = f&&f.src ? `資料來源：<a href="${esc(f.src)}" target="_blank" rel="noopener">院校／JUPAS</a>` : '資料來源：公開目錄整理';
+
+  $('detailTitle').textContent = I.short+' · '+p.code;
+  const favBtn=$('detailFav');
+  favBtn.className='fav'+(favs.has(p.code)?' on':'');
+  favBtn.dataset.code=p.code;
+
+  $('detailBody').innerHTML = `
+  <div class="card d-hero">
+    <div class="title-row"><h2 class="title">${esc(p.nameZh)}</h2></div>
+    <div class="muted" style="margin-top:4px">${esc(p.nameEn||'')}</div>
+    <div class="tags">
+      ${isPopular(p)?'<span class="pill hot">熱門</span>':''}
+      ${p.disc?`<span class="pill disc">${esc(p.disc)}</span>`:''}
+      ${p.funding&&p.funding!=='UGC-funded'?`<span class="pill fund">${p.funding==='SSSDP'?'SSSDP 資助':'自資'}</span>`:''}
+    </div>
+    <div class="stats-row">
+      <div class="st"><div class="lbl">院校</div><div class="val">${esc(I.short)}</div></div>
+      <div class="st"><div class="lbl">編號</div><div class="val" style="font-size:13px">${esc(p.code)}</div></div>
+      <div class="st"><div class="lbl">學額</div><div class="val">${intake!=null?intake:'—'}</div></div>
+      <div class="st"><div class="lbl">Band A 申請</div><div class="val">${bandA!=null?bandA:'—'}</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec-head">
+      <div class="ico">◎</div>
+      <div style="flex:1"><h3>資格及分數參考</h3></div>
+      <span class="status-pill ${st.cls}">${esc(st.txt)}</span>
+    </div>
+    <div class="cmp-row">
+      <div class="cell"><div class="lbl">年份</div><div class="val" style="font-size:18px">${yearVal}</div></div>
+      <div class="cell"><div class="lbl">${esc(scoreLabel)}</div><div class="val">${scoreVal}</div></div>
+      <div class="cell"><div class="lbl">我的分數</div><div class="val">${r.score!=null?fmt(r.score):'—'}</div>${deltaHtml}</div>
+    </div>
+    ${ref&&ref.kind==='median'&&ref.lq!=null?`<div class="muted" style="margin-top:8px">下四分位（LQ）：<b>${fmt(ref.lq)}</b>${ref.uq!=null?'　·　上四分位（UQ）：<b>'+fmt(ref.uq)+'</b>':''}</div>`:''}
+    ${footnote?`<div class="footnote">${esc(footnote)}</div>`:''}
+    <h4 style="margin:16px 0 6px;font-size:13px;color:var(--mu)">往年收生分數（2024–2026）</h4>
+    ${scoreHistory(p)}
+  </div>
+
+  <div class="card">
+    <div class="sec-head"><div class="ico">☰</div><div style="flex:1"><h3>公式</h3><div class="src">${srcLine}</div></div></div>
+    <div class="formula-badge">${esc(formulaTxt.split('；')[0].split('。')[0].slice(0,80))}</div>
+    ${f&&f.note?`<div class="footnote" style="margin-top:8px">${esc(f.note)}</div>`:''}
+    ${f&&f.partial?`<div class="footnote">本 App 未取得完整科目比重，以不加權／近似計算。</div>`:''}
+  </div>
+
+  <div class="card">
+    <div class="sec-head"><div class="ico">🔢</div><div style="flex:1"><h3>計分方法</h3><div class="src">${srcLine}</div></div></div>
+    ${calcTableHtml(r)}
+  </div>
+
+  <div class="card">
+    <div class="sec-head"><div class="ico">✓</div><h3>最低收生要求</h3></div>
+    ${bullets.length?`<ul class="req-list">${bullets.map(b=>`<li>${esc(b)}</li>`).join('')}</ul>`:'<div class="muted">未有資料</div>'}
+    ${r.fails&&r.fails.length?`<div class="fail" style="margin-top:10px">目前成績未符合：<br>${esc(r.fails.join('\n'))}</div>`:''}
+  </div>
+
+  <div class="card">
+    <div class="sec-head"><div class="ico">×</div><h3>科目加權</h3></div>
+    ${weights.length?`<ul class="weight-list">${weights.map(([s,w])=>`<li><span class="wn">${esc(SUBJ[s]||s)}</span><span class="mw">×${round2(w)}</span></li>`).join('')}</ul>`
+      :`<div class="muted">${f&&f.partial?'院校有科目比重，但公開頁面未能擷取各科加乘；本 App 以不加權計算。':'各科比重相同（×1），或未有公布加權。'}</div>`}
+    ${f&&f.bonus?`<div class="footnote" style="margin-top:8px">另有加分：${esc(typeof f.bonus==='object'?(f.bonus.t||'有'):String(f.bonus))}${r.calc&&r.calc.bonusTxt?'（'+esc(r.calc.bonusTxt)+'）':''}</div>`:''}
+  </div>
+
+  <div class="card">
+    <div class="sec-head"><div class="ico">ℹ</div><h3>其他資料</h3></div>
+    ${p.stats?`<div class="muted" style="margin-bottom:8px">2026 JUPAS：Band A 申請 ${p.stats.apps?.bandA??'–'}／總申請 ${p.stats.apps?.total??'–'}；Band A 取錄 ${p.stats.offers?.bandA??'–'}／總取錄 ${p.stats.offers?.total??'–'}</div>`:''}
+    ${p.remarks?`<div class="prebox">${esc(p.remarks)}</div>`:''}
+    <div class="link-row" style="margin-top:10px">
+      <a href="${esc(p.jupasUrl)}" target="_blank" rel="noopener">JUPAS 課程頁</a>
+      ${p.website?`<a href="${esc(p.website)}" target="_blank" rel="noopener">課程網站</a>`:''}
+      <span class="muted">學費：${esc(p.fee||'未有資料')}</span>
+    </div>
+  </div>`;
+}
+
+let detailCode=null;
+function openDetail(code){
+  detailCode=code;
+  renderDetail(code);
+  document.body.classList.add('detail-open');
+  $('detailHeader').classList.add('on');
+  document.querySelectorAll('.page').forEach(pg=>pg.classList.toggle('on', pg.id==='p-detail'));
+  window.scrollTo(0,0);
+}
+function closeDetail(){
+  detailCode=null;
+  document.body.classList.remove('detail-open');
+  $('detailHeader').classList.remove('on');
+  const tab=document.querySelector('#tabs button.on');
+  const pid=tab?tab.dataset.p:'home';
+  document.querySelectorAll('.page').forEach(pg=>pg.classList.toggle('on', pg.id==='p-'+pid));
+}
+
 let lastResults=[];
 function update(){
   save();
@@ -698,7 +958,7 @@ function update(){
   const cnt={safe:0,ok:0,reach:0,nc:0,no:0};
   filt.forEach(r=>{ const k=r.label==='na'?'nc':r.label; cnt[k]++; });
   const keys=[['safe','穩陣'],['ok','有機會'],['reach','進取'],['nc','未能比較'],['no','不符合']];
-  $('sumBox').innerHTML=keys.map(([k,n])=>`<div data-k="${k}" class="${state.label===k?'on':''}"><b style="color:var(--c${k==='safe'?1:k==='ok'?2:k==='reach'?3:k==='nc'?4:5})">${cnt[k]}</b><span>${n}</span></div>`).join('');
+  $('sumBox').innerHTML=keys.map(([k,n])=>`<div data-k="${k}" class="${state.label===k?'on':''}"><b style="color:var(--${k==='safe'?'ok':k==='ok'?'warn':k==='reach'?'hot':k==='nc'?'mute':'bad'})">${cnt[k]}</b><span>${n}</span></div>`).join('');
   $('sumBox').querySelectorAll('div').forEach(d=>d.onclick=()=>{ state.label = state.label===d.dataset.k?'all':d.dataset.k; shown=60; update(); });
   let list=filt.filter(r=>state.label==='all'||(state.label==='nc'?(r.label==='nc'||r.label==='na'):r.label===state.label));
   list.sort(sorter);
@@ -706,17 +966,24 @@ function update(){
   const modeNote = state.mode==='total' ? `<div class="card disc" style="margin-bottom:12px">總分模式：只按總分同收生分數比較，<b>冇檢查</b>入學要求同科目比重，結果只供粗略參考。</div>` : '';
   $('list').innerHTML = modeNote + (list.length? list.slice(0,shown).map(card).join('') : '<div class="empty">冇符合篩選條件嘅課程</div>');
   $('moreBtn').style.display = list.length>shown?'':'none';
-  bindFav($('list'));
+  bindCards($('list'));
   renderFav();
+  if(detailCode) renderDetail(detailCode);
 }
-function bindFav(root){
-  root.querySelectorAll('.fav').forEach(b=>b.onclick=()=>{ const c=b.dataset.code; favs.has(c)?favs.delete(c):favs.add(c); saveFav();
-    document.querySelectorAll('.fav[data-code="'+c+'"]').forEach(x=>x.classList.toggle('on',favs.has(c))); renderFav(); });
+function bindCards(root){
+  root.querySelectorAll('.fav').forEach(b=>b.onclick=e=>{ e.stopPropagation(); const c=b.dataset.code; favs.has(c)?favs.delete(c):favs.add(c); saveFav();
+    document.querySelectorAll('.fav[data-code="'+c+'"]').forEach(x=>x.classList.toggle('on',favs.has(c))); renderFav();
+    if(detailCode===c){ const df=$('detailFav'); if(df) df.classList.toggle('on',favs.has(c)); }
+  });
+  root.querySelectorAll('.prog').forEach(el=>{
+    el.onclick=()=>openDetail(el.dataset.code);
+    el.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openDetail(el.dataset.code); } };
+  });
 }
 function renderFav(){
   const fl=lastResults.filter(r=>favs.has(r.p.code)).sort(sorter);
   $('favList').innerHTML = fl.length? fl.map(card).join('') : '<div class="empty">未有最愛課程。喺課程卡右上角撳 ♥ 加入。</div>';
-  bindFav($('favList'));
+  bindCards($('favList'));
 }
 
 /* ===== 迷你 Markdown ===== */
@@ -780,7 +1047,7 @@ ${c.byI}
 - **有機會**：≥ 下四分位數（LQ），但低過中位數。
 - **進取**：符合最低入學要求，但低過 LQ（或者低過平均分）。
 - **不符合**：未達一般入學要求或課程指定科目要求。
-- **未有資料／未能比較**：揀定嘅比較年份冇收生分數，或者計分尺度唔同，冇得比較（頂部統計合併顯示為「未能比較」）。每個課程詳情仍然會列出其他年份（如有）。
+- **未有資料／未能比較**：揀定嘅比較年份冇收生分數，或者計分尺度唔同，冇得比較（頂部統計合併顯示為「未能比較」）。撳課程卡進入詳情頁，可睇多年收生分數、計分表同入學要求。
 
 ## 計分點樣計
 - **逐科模式**：每個課程盡量用院校公布嘅公式（換算尺度、比重、最佳 N 科、第 6 科加分）。冇公式嘅課程會用通用最佳五科估算，並清楚標示。浸大、嶺大嘅課程比重未取得，所以用不加權最佳五科計，分數可能會偏低。
@@ -800,9 +1067,15 @@ ${c.byI}
 
 /* ===== 分頁 ===== */
 document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
+  closeDetail();
   document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
   document.querySelectorAll('.page').forEach(pg=>pg.classList.toggle('on',pg.id==='p-'+b.dataset.p));
   window.scrollTo(0,0); });
+$('backBtn').onclick=()=>closeDetail();
+$('detailFav').onclick=()=>{ const c=$('detailFav').dataset.code; if(!c) return;
+  favs.has(c)?favs.delete(c):favs.add(c); saveFav();
+  document.querySelectorAll('.fav[data-code="'+c+'"]').forEach(x=>x.classList.toggle('on',favs.has(c)));
+  $('detailFav').classList.toggle('on',favs.has(c)); renderFav(); };
 $('moreBtn').onclick=()=>{ shown+=60; update(); };
 $('mdBox').innerHTML=md(MD);
 $('aboutBox').innerHTML=about();
@@ -810,7 +1083,7 @@ $('discl1').innerHTML='⚠️ 免責聲明：結果只供參考，唔保證錄�
 initInputs(); renderElec(); initFilters(); update();
 
 /* 供測試用 */
-window.__app={evalGrades,evalTotal,calcFormula,checkReq,PROGS,studentFromState,state,update};
+window.__app={evalGrades,evalTotal,calcFormula,checkReq,PROGS,studentFromState,state,update,openDetail,closeDetail};
 
 </script>
 </body>
